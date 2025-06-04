@@ -19,6 +19,7 @@ class HomePage extends StatelessWidget {
                 ),
                 sliver: SliverPersistentHeader(
                   delegate: SliverAppbar(),
+                  floating: false,
                   pinned: true,
                 ),
               ),
