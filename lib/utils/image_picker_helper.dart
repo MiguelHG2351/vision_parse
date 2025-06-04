@@ -24,6 +24,17 @@ class ImagePickerHelper {
     }
   }
 
+  static Future<File?> takePhoto() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      final croppedFile = await _cropImage(File(pickedFile.path));
+      return croppedFile;
+    } else {
+      return null;
+    }
+  }
+
   static Future<File?> _cropImage(File imageFile) async {
     try {
       final croppedFile = await ImageCropper().cropImage(

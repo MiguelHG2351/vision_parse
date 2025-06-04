@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:image_picker/image_picker.dart';
 import '../utils/image_picker_helper.dart';
 import 'dart:io';
 
 class AnalyzeTab extends StatefulWidget {
-  const AnalyzeTab({Key? key}) : super(key: key);
+  const AnalyzeTab({super.key});
 
   @override
   State<AnalyzeTab> createState() => _AnalyzeTabState();
@@ -12,6 +14,7 @@ class AnalyzeTab extends StatefulWidget {
 
 class _AnalyzeTabState extends State<AnalyzeTab> {
   File? _selectedImage;
+  String? _extractedText;
 
   Future<void> _pickImageFromGallery() async {
     final image = await ImagePickerHelper.pickImageFromGallery();
@@ -19,13 +22,30 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
       setState(() {
         _selectedImage = image;
       });
-      // TODO: Implement image processing logic here
+      _processImage();
     }
   }
 
   Future<void> _takePhoto() async {
-    // TODO: Implement camera functionality
-    // This will be similar to gallery but using ImageSource.camera
+    final pickedFile = await ImagePickerHelper.takePhoto();
+
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImage = pickedFile;
+      });
+      _processImage();
+    }
+  }
+
+  Future<void> _processImage() async {
+    final inputImage = InputImage.fromFilePath(_selectedImage!.path);
+    final textRecognizer = TextRecognizer();
+    final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
+
+    String extractedText = recognizedText.text;
+    setState(() {
+      _extractedText = extractedText;
+    });
   }
 
   @override
@@ -41,43 +61,74 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
           sliver: SliverToBoxAdapter(
             child: Column(
               children: [
-                SvgPicture.asset(
-                  'assets/icons/camera_icon.svg',
-                  width: 60,
-                  height: 60,
-                ),
                 if (_selectedImage != null)
                   Image.file(
                     _selectedImage!,
-                    height: 200,
+                    height: 350,
                     width: double.infinity,
                     fit: BoxFit.cover,
+                  )
+                else
+                  Column(
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/camera_icon.svg',
+                        width: 60,
+                        height: 60,
+                      ),
+                      Text(
+                        'Capture text',
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      Text(
+                        'Take a photo or select an image from your gallery',
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                    ],
                   ),
-                Text(
-                  'Capture text',
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                Text(
-                  'Take a photo or select an image from your gallery',
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: _takePhoto,
-                        child: Text('Take photo'),
+                SizedBox(height: 16),
+                if (_selectedImage == null)
+                  Column(
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.all(16.0),
+                            backgroundColor: Theme.of(context).colorScheme.primary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                          onPressed: _takePhoto,
+                          child: Text('Tomar foto', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white)),
+                        ),
                       ),
+                      SizedBox(height: 16),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.all(16.0),
+                            backgroundColor: Theme.of(context).colorScheme.primary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                          onPressed: _pickImageFromGallery,
+                          child: Text('Elegir de la galería', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white)),
+                        ),
+                      )
+                    ],
+                  ),
+                if (_extractedText != null && _extractedText!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: Text(
+                      'Extracted Text: $_extractedText',
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
-                    SizedBox(width: 16),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: _pickImageFromGallery,
-                        child: Text('Choose from gallery'),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
               ],
             ),
           ),
