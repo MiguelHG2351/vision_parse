@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vision_parse/widgets/sliver_appbar.dart';
+import 'package:vision_parse/widgets/analyze_tab.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -13,21 +14,21 @@ class HomePage extends StatelessWidget {
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
               SliverOverlapAbsorber(
-                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                  context,
+                ),
                 sliver: SliverPersistentHeader(
                   delegate: SliverAppbar(),
+                  floating: false,
                   pinned: true,
                 ),
-              )
+              ),
             ];
           },
-          body: const TabBarView(
-            children: [
-              Center(child: Text('Camera View')),
-              Center(child: Text('Gallery View')),
-            ],
+          body: TabBarView(
+            children: [AnalyzeTab(), Center(child: Text('History View'))],
           ),
-        )
+        ),
       ),
     );
   }
