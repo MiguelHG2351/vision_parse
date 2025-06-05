@@ -86,7 +86,10 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => FullscreenImageScreen(imageUrl: _selectedImage!.path),
+                              builder: (context) => FullscreenImageScreen(
+                                imageUrl: _selectedImage!.path,
+                                tag: 'imageHero',
+                              ),
                             ),
                           );
                         },

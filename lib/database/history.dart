@@ -1,27 +1,27 @@
-import 'package:isar/isar.dart';
+// import 'package:isar/isar.dart';
 
-part 'history.g.dart';
+// part 'history.g.dart';
 
-@Collection()
-class History {
-  Id id = Isar.autoIncrement;
+// @Collection()
+// class History {
+//   Id id = Isar.autoIncrement;
 
-  @Index(unique: true, replace: true)
-  late String url;
+//   @Index(unique: true, replace: true)
+//   late String url;
   
-  @Index()
-  late String rawText;
+//   @Index()
+//   late String rawText;
 
-  late DateTime timestamp;
+//   late DateTime timestamp;
 
-  History();
+//   History();
 
-  History.fromUrl(this.url) {
-    timestamp = DateTime.now();
-  }
+//   History.fromUrl(this.url) {
+//     timestamp = DateTime.now();
+//   }
 
-  @override
-  String toString() {
-    return 'History{id: $id, url: $url, timestamp: $timestamp}';
-  }
-}
+//   @override
+//   String toString() {
+//     return 'History{id: $id, url: $url, timestamp: $timestamp}';
+//   }
+// }

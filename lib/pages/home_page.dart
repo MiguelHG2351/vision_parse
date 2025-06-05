@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vision_parse/widgets/history_tab.dart';
 import 'package:vision_parse/widgets/sliver_appbar.dart';
 import 'package:vision_parse/widgets/analyze_tab.dart';
 
@@ -26,7 +27,7 @@ class HomePage extends StatelessWidget {
             ];
           },
           body: TabBarView(
-            children: [AnalyzeTab(), Center(child: Text('History View'))],
+            children: [AnalyzeTab(), HistoryTab()],
           ),
         ),
       ),

@@ -7,7 +7,8 @@ import 'package:vision_parse/utils/storage_helper.dart';
 class ExtractPage extends StatefulWidget {
   final String imagePath;
   final String extractedText;
-  const ExtractPage({super.key, required this.imagePath, required this.extractedText});
+  final bool showSaveButton;
+  const ExtractPage({super.key, required this.imagePath, required this.extractedText, this.showSaveButton = true});
 
   @override
   State<ExtractPage> createState() => _ExtractPageState();
@@ -41,6 +42,7 @@ class _ExtractPageState extends State<ExtractPage> with SingleTickerProviderStat
       appBar: AppBar(
         title: const Text('Analyzed Image'),
         actions: [
+          if (widget.showSaveButton)
           TextButton.icon(
             style: TextButton.styleFrom(
               foregroundColor: isSaved ? Colors.green : Colors.black,

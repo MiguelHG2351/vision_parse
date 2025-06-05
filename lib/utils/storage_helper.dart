@@ -26,7 +26,7 @@ class StorageHelper {
     return newFile;
   }
 
-  Future<List<FileSystemEntity>> loadHistoryFiles() async {
+  static Future<List<FileSystemEntity>> loadHistoryFiles() async {
     final Directory historyDir = await _getHistoryDirectory();
     // Listado de todos los archivos (puede incluir subdirectorios si hubiesen)
     final List<FileSystemEntity> allEntities = historyDir.listSync();
@@ -49,4 +49,13 @@ class StorageHelper {
     return imageFiles;
   }
 
+  static Future<void> _deleteImage(File file) async {
+    try {
+      if (await file.exists()) {
+        await file.delete();
+      }
+    } catch (e) {
+      print('Error borrando la imagen: $e');
+    }
+  }
 }
