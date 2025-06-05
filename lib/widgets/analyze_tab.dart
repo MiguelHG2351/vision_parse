@@ -15,7 +15,7 @@ class AnalyzeTab extends StatefulWidget {
 
 class _AnalyzeTabState extends State<AnalyzeTab> {
   File? _selectedImage;
-  String? _extractedText;
+  bool isProcessing = false;
 
   Future<void> _pickImageFromGallery() async {
     final image = await ImagePickerHelper.pickImageFromGallery();
@@ -23,7 +23,6 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
       setState(() {
         _selectedImage = image;
       });
-      // _processImage();
     }
   }
 
@@ -34,13 +33,15 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
       setState(() {
         _selectedImage = pickedFile;
       });
-      // _processImage();
     }
   }
 
   Future<void> _processImage() async {
     final inputImage = InputImage.fromFilePath(_selectedImage!.path);
     final textRecognizer = TextRecognizer();
+    setState(() {
+      isProcessing = true;
+    });
     final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
 
     String extractedText = recognizedText.text;
@@ -186,7 +187,6 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
                           onPressed: () {
                             setState(() {
                               _selectedImage = null;
-                              _extractedText = null;
                             });
                           },
                           style: ElevatedButton.styleFrom(

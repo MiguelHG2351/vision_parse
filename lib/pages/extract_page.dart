@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:vision_parse/widgets/email_card.dart';
 import 'package:vision_parse/utils/text_extractor.dart';
+import 'package:vision_parse/utils/storage_helper.dart';
 
 class ExtractPage extends StatefulWidget {
   final String imagePath;
@@ -17,6 +18,7 @@ class _ExtractPageState extends State<ExtractPage> with SingleTickerProviderStat
   late final List<String> _emails;
   late final List<String> _phones;
   late final List<String> _urls;
+  bool isSaved = false;
 
   @override
   void initState() {
@@ -38,6 +40,26 @@ class _ExtractPageState extends State<ExtractPage> with SingleTickerProviderStat
     return Scaffold(
       appBar: AppBar(
         title: const Text('Analyzed Image'),
+        actions: [
+          TextButton.icon(
+            style: TextButton.styleFrom(
+              foregroundColor: isSaved ? Colors.green : Colors.black,
+            ),
+            onPressed: isSaved ? null : () {
+              // Aquí puedes implementar la lógica para guardar los datos
+              // Por ejemplo, podrías guardar los emails, phones y urls en una base de datos o archivo
+              StorageHelper.movePickerFileToHistory(File(widget.imagePath));
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Datos guardados exitosamente')),
+              );
+              setState(() {
+                isSaved = true;
+              });
+            },
+            icon: Icon(Icons.save, color: isSaved ? Colors.green : Colors.black),
+            label: Text(isSaved ? 'Guardado' : 'Guardar', style: TextStyle(color: isSaved ? Colors.green : Colors.black)),
+          ),
+        ],
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
