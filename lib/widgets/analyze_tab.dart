@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:vision_parse/utils/text_extractor.dart';
-import 'package:vision_parse/widgets/email_card.dart';
+import 'package:vision_parse/pages/extract_page.dart';
 import 'package:vision_parse/widgets/full_screen_image_screen.dart';
 import '../utils/image_picker_helper.dart';
 import 'dart:io';
@@ -18,23 +16,6 @@ class AnalyzeTab extends StatefulWidget {
 class _AnalyzeTabState extends State<AnalyzeTab> {
   File? _selectedImage;
   String? _extractedText;
-  List<String> _emails = [];
-  List<String> _urls = [];
-  List<String> _phones = [];
-  final TextEditingController _ocrController = TextEditingController();
-
-  void _analyzeText() {
-    final raw = _ocrController.text;
-    final emails = TextExtractor.extractEmails(raw);
-    final urls = TextExtractor.extractUrls(raw);
-    final phones = TextExtractor.extractPhones(raw);
-
-    setState(() {
-      _emails = emails;
-      _urls = urls;
-      _phones = phones;
-    });
-  }
 
   Future<void> _pickImageFromGallery() async {
     final image = await ImagePickerHelper.pickImageFromGallery();
@@ -42,7 +23,7 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
       setState(() {
         _selectedImage = image;
       });
-      _processImage();
+      // _processImage();
     }
   }
 
@@ -53,7 +34,7 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
       setState(() {
         _selectedImage = pickedFile;
       });
-      _processImage();
+      // _processImage();
     }
   }
 
@@ -63,16 +44,23 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
     final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
 
     String extractedText = recognizedText.text;
-    setState(() {
-      _extractedText = extractedText;
-      _ocrController.text = extractedText;
-      _analyzeText();
-    });
+    // setState(() {
+    //   _extractedText = extractedText;
+    //   _ocrController.text = extractedText;
+    // });
+    textRecognizer.close();
+
+    if (!mounted) return;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ExtractPage(imagePath: _selectedImage!.path, extractedText: extractedText),
+      ),
+    );
   }
 
   @override
   void dispose() {
-    _ocrController.dispose();
     super.dispose();
   }
 
@@ -170,55 +158,49 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
                         ),
                       )
                     ],
-                  ),
-                if (_extractedText != null && _extractedText!.isNotEmpty)
-                    Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 16.0),
-                          child: TextField(
-                              controller: _ocrController,
-                              maxLines: 6,
-                              readOnly: true,
-                              decoration: InputDecoration(
-                              labelText: 'Texto extraído:',
-                              border: OutlineInputBorder(),
+                  )
+                else
+                  Column(
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.all(16.0),
+                            backgroundColor: Theme.of(context).colorScheme.primary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
                             ),
-                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          onPressed: _processImage,
+                          child: Text(
+                            'Extraer texto',
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white),
                           ),
                         ),
-                        SizedBox(height: 16),
-                        if (_emails.isNotEmpty) ...[
-                          Text(
-                            'Correos detectados:',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                      ),
+                      SizedBox(height: 16),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              _selectedImage = null;
+                              _extractedText = null;
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.all(16.0),
+                            backgroundColor: Theme.of(context).colorScheme.secondary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
                             ),
                           ),
-                          ..._emails.map((email) => EmailCard(email: email)),
-                        ],
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                _selectedImage = null;
-                                _extractedText = null;
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.all(16.0),
-                              backgroundColor: Theme.of(context).colorScheme.primary,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                            child: Text('Clear', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white)),
-                          ),
-                        )
-                      ],
-                    ),
+                          child: Text('Clear', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white)),
+                        ),
+                      ),
+                    ],
+                  ),
               ],
             ),
           ),
