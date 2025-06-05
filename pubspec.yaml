@@ -33,6 +33,17 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_svg: ^2.1.0
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
+
+dev_dependencies:
+
+  # The "flutter_lints" package below contains a set of recommended lints to
+  # encourage good coding practices. The lint set provided by the package is
+  # activated in the `analysis_options.yaml` file located at the root of your
+  # package. See that file for information about deactivating specific lint
+  # rules and activating additional ones.
+  build_runner: ^2.4.13
   google_mlkit_text_recognition: ^0.15.0
   image_cropper: ^9.1.0
   image_picker: ^1.0.7
@@ -44,6 +55,7 @@ dev_dependencies:
   flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
+  isar_generator: ^3.1.0+1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
