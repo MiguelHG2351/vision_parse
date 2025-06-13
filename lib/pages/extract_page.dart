@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:vision_parse/widgets/email_card.dart';
 import 'package:vision_parse/utils/text_extractor.dart';
 import 'package:vision_parse/utils/storage_helper.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ExtractPage extends StatefulWidget {
   final String imagePath;
@@ -120,6 +121,25 @@ class _ExtractPageState extends State<ExtractPage> with SingleTickerProviderStat
                         itemBuilder: (context, idx) => ListTile(
                           leading: const Icon(Icons.link),
                           title: Text(_urls[idx]),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.open_in_browser),
+                            tooltip: 'Open in browser',
+                            onPressed: () async {
+                              String urlString = _urls[idx];
+                              if (!urlString.startsWith('http://') && !urlString.startsWith('https://')) {
+                                urlString = 'https://'+urlString;
+                              }
+                              try {
+                                final url = Uri.parse(urlString);
+                                await launchUrl(url, mode: LaunchMode.externalApplication);
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('No se pudo abrir la URL: $urlString')),
+                                );
+                              }
+                              
+                            },
+                          ),
                         ),
                       ),
               ],
