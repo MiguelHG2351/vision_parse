@@ -15,24 +15,37 @@ class AnalyzeTab extends StatefulWidget {
 
 class _AnalyzeTabState extends State<AnalyzeTab> {
   File? _selectedImage;
+  File? _originalImage;
   bool isProcessing = false;
 
   Future<void> _pickImageFromGallery() async {
-    final image = await ImagePickerHelper.pickImageFromGallery();
-    if (image != null) {
+    final result = await ImagePickerHelper.pickImageFromGallery();
+    if (result != null) {
       setState(() {
-        _selectedImage = image;
+        _selectedImage = result.cropped;
+        _originalImage = result.original;
       });
     }
   }
 
   Future<void> _takePhoto() async {
-    final pickedFile = await ImagePickerHelper.takePhoto();
-
-    if (pickedFile != null) {
+    final result = await ImagePickerHelper.takePhoto();
+    if (result != null) {
       setState(() {
-        _selectedImage = pickedFile;
+        _selectedImage = result.cropped;
+        _originalImage = result.original;
       });
+    }
+  }
+
+  Future<void> _cropImageAgain() async {
+    if (_originalImage != null) {
+      final cropped = await ImagePickerHelper.cropImage(_originalImage!);
+      if (cropped != null) {
+        setState(() {
+          _selectedImage = cropped;
+        });
+      }
     }
   }
 
@@ -43,14 +56,8 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
       isProcessing = true;
     });
     final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
-
     String extractedText = recognizedText.text;
-    // setState(() {
-    //   _extractedText = extractedText;
-    //   _ocrController.text = extractedText;
-    // });
     textRecognizer.close();
-
     if (!mounted) return;
     Navigator.push(
       context,
@@ -58,6 +65,9 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
         builder: (context) => ExtractPage(imagePath: _selectedImage!.path, extractedText: extractedText),
       ),
     );
+    setState(() {
+      isProcessing = false;
+    });
   }
 
   @override
@@ -123,7 +133,7 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       Text(
-                        'Take a photo or select an image from your gallery',
+                        'Toma una foto o selecciona una imagen de tu galería',
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ],
@@ -135,11 +145,13 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.all(16.0),
-                            backgroundColor: Theme.of(context).colorScheme.primary,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
+                          style: ButtonStyle(
+                            padding: WidgetStateProperty.all(const EdgeInsets.all(16.0)),
+                            backgroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.primary),
+                            shape: WidgetStateProperty.all(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
                             ),
                           ),
                           onPressed: _takePhoto,
@@ -150,11 +162,13 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.all(16.0),
-                            backgroundColor: Theme.of(context).colorScheme.primary,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
+                          style: ButtonStyle(
+                            padding: WidgetStateProperty.all(const EdgeInsets.all(16.0)),
+                            backgroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.primary),
+                            shape: WidgetStateProperty.all(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
                             ),
                           ),
                           onPressed: _pickImageFromGallery,
@@ -169,11 +183,51 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.all(16.0),
-                            backgroundColor: Theme.of(context).colorScheme.primary,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
+                          style: ButtonStyle(
+                            padding: WidgetStateProperty.all(const EdgeInsets.all(16.0)),
+                            backgroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.secondary),
+                            foregroundColor: WidgetStateProperty.all(Colors.white),
+                            overlayColor: WidgetStateProperty.resolveWith<Color?>(
+                              (Set<WidgetState> states) {
+                                if (states.contains(WidgetState.pressed)) {
+                                  return Theme.of(context).colorScheme.secondary.withValues(alpha: 0.2);
+                                }
+                                return null;
+                              },
+                            ),
+                            shape: WidgetStateProperty.all(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                          ),
+                          onPressed: _cropImageAgain,
+                          child: Text(
+                            'Recortar imagen',
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            padding: WidgetStateProperty.all(const EdgeInsets.all(16.0)),
+                            backgroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.primary),
+                            foregroundColor: WidgetStateProperty.all(Colors.white),
+                            overlayColor: WidgetStateProperty.resolveWith<Color?>(
+                              (Set<WidgetState> states) {
+                                if (states.contains(WidgetState.pressed)) {
+                                  return Theme.of(context).colorScheme.primary.withValues(alpha: 0.2);
+                                }
+                                return null;
+                              },
+                            ),
+                            shape: WidgetStateProperty.all(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
                             ),
                           ),
                           onPressed: _processImage,

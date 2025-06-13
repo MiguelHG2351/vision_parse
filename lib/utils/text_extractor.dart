@@ -7,10 +7,9 @@ class TextExtractor {
     caseSensitive: false,
   );
 
-  // Expresión regular para detectar URLs (http/https)
-  // Nota: es una regex básica. Refínala según tu necesidad.
+  // Expresión regular para detectar URLs (http/https, www, subdominios, sin protocolo)
   static final RegExp _urlRegex = RegExp(
-    r'\bhttps?:\/\/[^\s/$.?#].[^\s]*\b',
+    r"\b((?:https?:\/\/)?(?:www\.|[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?:\/[\w\-\._~:\/?#\[\]@!\$&'\(\)\*\+,;=]*)?)",
     caseSensitive: false,
   );
 

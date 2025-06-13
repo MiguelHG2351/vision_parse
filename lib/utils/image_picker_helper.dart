@@ -3,8 +3,15 @@ import 'package:image_cropper/image_cropper.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 
+class PickedImageResult {
+  final File original;
+  final File cropped;
+
+  PickedImageResult({required this.original, required this.cropped});
+}
+
 class ImagePickerHelper {
-  static Future<File?> pickImageFromGallery() async {
+  static Future<PickedImageResult?> pickImageFromGallery() async {
     try {
       final picker = ImagePicker();
       final pickedFile = await picker.pickImage(
@@ -14,8 +21,11 @@ class ImagePickerHelper {
       );
 
       if (pickedFile != null) {
-        final croppedFile = await _cropImage(File(pickedFile.path));
-        return croppedFile;
+        final original = File(pickedFile.path);
+        final croppedFile = await _cropImage(original);
+        if (croppedFile != null) {
+          return PickedImageResult(original: original, cropped: croppedFile);
+        }
       }
       return null;
     } catch (e) {
@@ -24,15 +34,21 @@ class ImagePickerHelper {
     }
   }
 
-  static Future<File?> takePhoto() async {
+  static Future<PickedImageResult?> takePhoto() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.camera);
     if (pickedFile != null) {
-      final croppedFile = await _cropImage(File(pickedFile.path));
-      return croppedFile;
-    } else {
-      return null;
+      final original = File(pickedFile.path);
+      final croppedFile = await _cropImage(original);
+      if (croppedFile != null) {
+        return PickedImageResult(original: original, cropped: croppedFile);
+      }
     }
+    return null;
+  }
+
+  static Future<File?> cropImage(File imageFile) async {
+    return await _cropImage(imageFile);
   }
 
   static Future<File?> _cropImage(File imageFile) async {

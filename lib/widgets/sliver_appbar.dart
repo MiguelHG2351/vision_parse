@@ -43,10 +43,10 @@ class SliverAppbar extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => 160;
+  double get maxExtent => 170;
 
   @override
-  double get minExtent => 160;
+  double get minExtent => 170;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
