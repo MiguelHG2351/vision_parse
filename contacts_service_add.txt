@@ -1,0 +1,2 @@
+# Add this to your pubspec.yaml dependencies section:
+# contacts_service: ^0.6.3

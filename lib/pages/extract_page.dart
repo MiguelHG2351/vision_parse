@@ -4,6 +4,8 @@ import 'package:vision_parse/widgets/email_card.dart';
 import 'package:vision_parse/utils/text_extractor.dart';
 import 'package:vision_parse/utils/storage_helper.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:contacts_service_plus/contacts_service_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class ExtractPage extends StatefulWidget {
   final String imagePath;
@@ -111,6 +113,35 @@ class _ExtractPageState extends State<ExtractPage> with SingleTickerProviderStat
                         itemBuilder: (context, idx) => ListTile(
                           leading: const Icon(Icons.phone),
                           title: Text(_phones[idx]),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.person_add),
+                            tooltip: 'Agregar a contactos',
+                            onPressed: () async {
+                              final status = await Permission.contacts.request();
+                              if (!status.isGranted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Permiso de contactos denegado.')),
+                                );
+                                return;
+                              }
+                              final phone = _phones[idx];
+                              final uri = Uri(
+                                scheme: 'content',
+                                path: 'com.android.contacts/contacts',
+                                queryParameters: {
+                                  'phone': phone,
+                                },
+                              );
+                              try {
+                                final telUri = Uri(scheme: 'tel', path: phone);
+                                await launchUrl(telUri);
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('No se pudo abrir el formulario de contactos.')),
+                                );
+                              }
+                            },
+                          ),
                         ),
                       ),
 
