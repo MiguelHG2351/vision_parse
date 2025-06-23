@@ -157,12 +157,13 @@ class _ExtractPageState extends State<ExtractPage> with SingleTickerProviderStat
                             onPressed: () async {
                               String urlString = _urls[idx];
                               if (!urlString.startsWith('http://') && !urlString.startsWith('https://')) {
-                                urlString = 'https://'+urlString;
+                                urlString = 'https://$urlString';
                               }
                               try {
                                 final url = Uri.parse(urlString);
                                 await launchUrl(url, mode: LaunchMode.externalApplication);
                               } catch (e) {
+                                // ignore: use_build_context_synchronously
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(content: Text('No se pudo abrir la URL: $urlString')),
                                 );
