@@ -2,10 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
-import 'package:vision_parse/pages/extract_page.dart';
 import 'package:vision_parse/utils/storage_helper.dart';
-import 'package:vision_parse/widgets/full_screen_image_screen.dart';
-import 'package:vision_parse/widgets/image_detail_page.dart';
 import 'package:go_router/go_router.dart';
 
 class HistoryTab extends StatefulWidget {

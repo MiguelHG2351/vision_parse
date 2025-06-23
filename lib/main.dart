@@ -1,8 +1,21 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:vision_parse/core/constants.dart';
+import 'package:vision_parse/core/get_it.dart';
 import 'core/router.dart';
 
-void main() {
+void main() async {
+  if (!kReleaseMode) {
+    await dotenv.load(fileName: ".env");
+  }
+  await Supabase.initialize(
+    url: AppConstants.supabaseUrl,
+    anonKey: AppConstants.supabaseApiKey,
+  );
+  setupServiceLocator();
+  
   runApp(const MyApp());
 }
 

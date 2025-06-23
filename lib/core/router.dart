@@ -1,4 +1,6 @@
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:vision_parse/core/get_it.dart';
 import 'package:vision_parse/pages/home_page.dart';
 import 'package:vision_parse/pages/extract_page.dart';
 import 'package:vision_parse/widgets/full_screen_image_screen.dart';
@@ -6,6 +8,22 @@ import 'package:vision_parse/widgets/image_detail_page.dart';
 
 final GoRouter router = GoRouter(
   initialLocation: '/',
+  redirect: (context, state) {
+    // final supabase = serviceLocator<SupabaseClient>();
+    // final supabaseSession = supabase.auth.currentSession;
+
+
+    // supabase.auth.signInWithPassword(password: password, email: email);
+
+    // supabase.rpc('get_subscription_by_email', params: {
+    //   'p_email': supabase.auth.currentUser?.email,
+    // });
+    
+    // if (supabaseSession == null) {
+    //   return '/login';
+    // }
+    // return null;
+  },
   routes: [
     GoRoute(
       path: '/',
