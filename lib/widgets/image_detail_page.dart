@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 /// A page that displays the image detail
 class ImageDetailPage extends StatefulWidget {
@@ -65,7 +66,7 @@ class _ImageDetailPageState extends State<ImageDetailPage> {
   @override
   Widget build(BuildContext context) => Dismissible(
         key: const ValueKey('image-detail'),
-        onDismissed: (_) => Navigator.pop(context),
+        onDismissed: (_) => context.pop(),
         direction: DismissDirection.vertical,
         child: Scaffold(
           backgroundColor: const Color.fromARGB(255, 39, 39, 21),
@@ -123,9 +124,7 @@ class _ImageDetailPageState extends State<ImageDetailPage> {
                         children: [
                           ElevatedButton(
                             onPressed: () async {
-                              Navigator.pop(context, {
-                                'scan_again': true,
-                              });
+                              context.pop({'scan_again': true});
                             },
                             child: const Text('Escanear de nuevo'),
                           ),

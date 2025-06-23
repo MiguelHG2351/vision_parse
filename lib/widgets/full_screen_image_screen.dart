@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class FullscreenImageScreen extends StatelessWidget {
   final String imageUrl;
@@ -17,7 +18,7 @@ class FullscreenImageScreen extends StatelessWidget {
       backgroundColor: const Color.fromARGB(255, 39, 39, 21),
       body: GestureDetector(
         onTap: () {
-          Navigator.pop(context);
+          context.pop();
         },
         child: Center(
           child: Hero(

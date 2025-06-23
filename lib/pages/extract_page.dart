@@ -4,7 +4,6 @@ import 'package:vision_parse/widgets/email_card.dart';
 import 'package:vision_parse/utils/text_extractor.dart';
 import 'package:vision_parse/utils/storage_helper.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:contacts_service_plus/contacts_service_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ExtractPage extends StatefulWidget {

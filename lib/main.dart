@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:vision_parse/pages/home_page.dart';
+import 'package:go_router/go_router.dart';
+import 'core/router.dart';
 
 void main() {
   runApp(const MyApp());
@@ -8,16 +9,15 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: HomePage(),
+      routerConfig: router,
     );
   }
 }

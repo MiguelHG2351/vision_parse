@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
-import 'package:vision_parse/pages/extract_page.dart';
-import 'package:vision_parse/widgets/full_screen_image_screen.dart';
+import 'package:go_router/go_router.dart';
 import '../utils/image_picker_helper.dart';
 import 'dart:io';
 
@@ -59,12 +58,10 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
     String extractedText = recognizedText.text;
     textRecognizer.close();
     if (!mounted) return;
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ExtractPage(imagePath: _selectedImage!.path, extractedText: extractedText),
-      ),
-    );
+    context.push('/extract', extra: {
+      'imagePath': _selectedImage!.path,
+      'extractedText': extractedText,
+    });
     setState(() {
       isProcessing = false;
     });
@@ -93,15 +90,10 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FullscreenImageScreen(
-                                imageUrl: _selectedImage!.path,
-                                tag: 'imageHero',
-                              ),
-                            ),
-                          );
+                          context.push('/fullscreen', extra: {
+                            'imageUrl': _selectedImage!.path,
+                            'tag': 'imageHero',
+                          });
                         },
                         child: ConstrainedBox(
                           constraints: BoxConstraints(

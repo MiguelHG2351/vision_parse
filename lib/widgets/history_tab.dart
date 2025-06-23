@@ -6,6 +6,7 @@ import 'package:vision_parse/pages/extract_page.dart';
 import 'package:vision_parse/utils/storage_helper.dart';
 import 'package:vision_parse/widgets/full_screen_image_screen.dart';
 import 'package:vision_parse/widgets/image_detail_page.dart';
+import 'package:go_router/go_router.dart';
 
 class HistoryTab extends StatefulWidget {
   const HistoryTab({super.key});
@@ -78,29 +79,17 @@ class _HistoryTabState extends State<HistoryTab> {
                       if (file is! File) return const SizedBox.shrink();
                       return GestureDetector(
                         onTap: () async {
-                          final result = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ImageDetailPage(
-                                images: [file.path],
-                                currentIndex: 0,
-                              ),
-                            ),
-                          );
-
-
-                          if (!mounted && !result['scan_again']) return;
+                          final result = await context.push('/image-detail', extra: {
+                            'images': [file.path],
+                            'currentIndex': 0,
+                          });
+                          if (!mounted || result == null || result is! Map || result['scan_again'] != true) return;
                           final extractedText = await _processImage(file.path);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ExtractPage(
-                                imagePath: file.path,
-                                extractedText: extractedText,
-                                showSaveButton: false,
-                              ),
-                            ),
-                          );
+                          context.push('/extract', extra: {
+                            'imagePath': file.path,
+                            'extractedText': extractedText,
+                            'showSaveButton': false,
+                          });
                         },
                         child: Image.file(
                           file,
