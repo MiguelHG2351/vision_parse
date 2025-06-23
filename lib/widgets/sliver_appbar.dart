@@ -21,15 +21,15 @@ class SliverAppbar extends SliverPersistentHeaderDelegate {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Vision Parse',
+                      'OCR Vision',
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     TabBar(
                       tabs: [
-                        Tab(icon: Icon(Icons.camera), child: Text('Analyze')),
-                        Tab(icon: Icon(Icons.history), child: Text('History')),
+                        Tab(icon: Icon(Icons.camera), child: Text('Analizar')),
+                        Tab(icon: Icon(Icons.history), child: Text('Historial')),
                       ],
                     ),
                   ],
@@ -43,10 +43,10 @@ class SliverAppbar extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => 170;
+  double get maxExtent => 220;
 
   @override
-  double get minExtent => 170;
+  double get minExtent => 140;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {

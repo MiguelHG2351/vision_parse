@@ -51,7 +51,7 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
 
   Future<void> _processImage() async {
     final inputImage = InputImage.fromFilePath(_selectedImage!.path);
-    final textRecognizer = TextRecognizer();
+    final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
     setState(() {
       isProcessing = true;
     });
@@ -129,25 +129,26 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
                         height: 60,
                       ),
                       Text(
-                        'Capture text',
+                        'Captura o selecciona una imagen',
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
+                      SizedBox(height: 8),
                       Text(
                         'Toma una foto o selecciona una imagen de tu galería',
+                        textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ],
                   ),
                 SizedBox(height: 16),
                 if (_selectedImage == null)
-                  Column(
+                  Row(
                     children: [
-                      SizedBox(
-                        width: double.infinity,
+                      Expanded(
                         child: ElevatedButton(
                           style: ButtonStyle(
                             padding: WidgetStateProperty.all(const EdgeInsets.all(16.0)),
-                            backgroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.primary),
+                            backgroundColor: WidgetStateProperty.all(Colors.orange),
                             shape: WidgetStateProperty.all(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8.0),
@@ -158,13 +159,12 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
                           child: Text('Tomar foto', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white)),
                         ),
                       ),
-                      SizedBox(height: 16),
-                      SizedBox(
-                        width: double.infinity,
+                      SizedBox(width: 16),
+                      Expanded(
                         child: ElevatedButton(
                           style: ButtonStyle(
                             padding: WidgetStateProperty.all(const EdgeInsets.all(16.0)),
-                            backgroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.primary),
+                            backgroundColor: WidgetStateProperty.all(Colors.orange),
                             shape: WidgetStateProperty.all(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8.0),
@@ -174,68 +174,70 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
                           onPressed: _pickImageFromGallery,
                           child: Text('Elegir de la galería', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white)),
                         ),
-                      )
+                      ),
                     ],
                   )
                 else
                   Column(
                     children: [
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          style: ButtonStyle(
-                            padding: WidgetStateProperty.all(const EdgeInsets.all(16.0)),
-                            backgroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.secondary),
-                            foregroundColor: WidgetStateProperty.all(Colors.white),
-                            overlayColor: WidgetStateProperty.resolveWith<Color?>(
-                              (Set<WidgetState> states) {
-                                if (states.contains(WidgetState.pressed)) {
-                                  return Theme.of(context).colorScheme.secondary.withValues(alpha: 0.2);
-                                }
-                                return null;
-                              },
-                            ),
-                            shape: WidgetStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                padding: WidgetStateProperty.all(const EdgeInsets.all(16.0)),
+                                backgroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.secondary),
+                                foregroundColor: WidgetStateProperty.all(Colors.white),
+                                overlayColor: WidgetStateProperty.resolveWith<Color?>(
+                                  (Set<WidgetState> states) {
+                                    if (states.contains(WidgetState.pressed)) {
+                                      return Theme.of(context).colorScheme.secondary.withValues(alpha: 0.2);
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                shape: WidgetStateProperty.all(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                ),
+                              ),
+                              onPressed: _cropImageAgain,
+                              child: Text(
+                                'Recortar imagen',
+                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white),
                               ),
                             ),
                           ),
-                          onPressed: _cropImageAgain,
-                          child: Text(
-                            'Recortar imagen',
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          style: ButtonStyle(
-                            padding: WidgetStateProperty.all(const EdgeInsets.all(16.0)),
-                            backgroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.primary),
-                            foregroundColor: WidgetStateProperty.all(Colors.white),
-                            overlayColor: WidgetStateProperty.resolveWith<Color?>(
-                              (Set<WidgetState> states) {
-                                if (states.contains(WidgetState.pressed)) {
-                                  return Theme.of(context).colorScheme.primary.withValues(alpha: 0.2);
-                                }
-                                return null;
-                              },
-                            ),
-                            shape: WidgetStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
+                          SizedBox(width: 16),
+                          Expanded(
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                padding: WidgetStateProperty.all(const EdgeInsets.all(16.0)),
+                                backgroundColor: WidgetStateProperty.all(Colors.orange),
+                                foregroundColor: WidgetStateProperty.all(Colors.white),
+                                overlayColor: WidgetStateProperty.resolveWith<Color?>(
+                                  (Set<WidgetState> states) {
+                                    if (states.contains(WidgetState.pressed)) {
+                                      return Theme.of(context).colorScheme.primary.withValues(alpha: 0.2);
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                shape: WidgetStateProperty.all(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                ),
+                              ),
+                              onPressed: _processImage,
+                              child: Text(
+                                'Extraer texto',
+                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white),
                               ),
                             ),
                           ),
-                          onPressed: _processImage,
-                          child: Text(
-                            'Extraer texto',
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white),
-                          ),
-                        ),
+                        ],
                       ),
                       SizedBox(height: 16),
                       SizedBox(
