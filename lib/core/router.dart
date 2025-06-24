@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vision_parse/core/get_it.dart';
@@ -6,6 +5,7 @@ import 'package:vision_parse/pages/get_started_page.dart';
 import 'package:vision_parse/pages/home_page.dart';
 import 'package:vision_parse/pages/extract_page.dart';
 import 'package:vision_parse/pages/settings_page.dart';
+import 'package:vision_parse/pages/signin_page.dart';
 import 'package:vision_parse/utils/shared_preferences_manager.dart';
 import 'package:vision_parse/widgets/full_screen_image_screen.dart';
 import 'package:vision_parse/widgets/image_detail_page.dart';
@@ -32,8 +32,14 @@ final GoRouter router = GoRouter(
       path: GetStartedPage.path,
       builder: (context, state) => const GetStartedPage(),
     ),
+    GoRoute(
+      name: SigninPage.pathName,
+      path: SigninPage.path,
+      builder: (context, state) => const SigninPage(),
+    ),
     StatefulShellRoute.indexedStack(
       branches: [
+        // goBranch(0)
         StatefulShellBranch(
           routes: [
             GoRoute(
@@ -43,6 +49,7 @@ final GoRouter router = GoRouter(
             ),
           ],
         ),
+        // goBranch(1)
         StatefulShellBranch(
           routes: [
             GoRoute(

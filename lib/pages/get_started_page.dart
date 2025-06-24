@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vision_parse/core/get_it.dart';
+import 'package:vision_parse/pages/signin_page.dart';
 import 'package:vision_parse/utils/shared_preferences_manager.dart';
 
 class GetStartedPage extends StatelessWidget {
@@ -33,14 +35,14 @@ class GetStartedPage extends StatelessWidget {
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/register');
+                  // TODO: Implement registration logic
                 },
                 child: const Text('Register'),
               ),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/sign-in');
+                  context.goNamed(SigninPage.pathName);
                 },
                 child: const Text('Login'),
               ),

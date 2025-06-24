@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:vision_parse/pages/home_page.dart';
 
+final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
 class SigninPage extends StatelessWidget {
   const SigninPage({super.key});
 
@@ -15,14 +17,17 @@ class SigninPage extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Container(
+          padding: const EdgeInsets.all(20),
           width: double.infinity,
           constraints: BoxConstraints(
             maxWidth: 400
           ),
           child: Form(
+            key: _formKey, // with the key you can use _formKey.currentState?.validate() to check if all fields are valid
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                // .asset is used to load an image from the assets folder
                 Image.asset(
                   'assets/images/pingu-login.png',
                   width: 100,
@@ -39,6 +44,8 @@ class SigninPage extends StatelessWidget {
                     border: const OutlineInputBorder(),
                     hintText: 'Inicio de sesión',
                   ),
+                  // Autovalidate mode to validate fields when the user interacts with them, f.g. when they focus on the field or change its value
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email';
