@@ -1,34 +1,61 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vision_parse/core/get_it.dart';
+import 'package:vision_parse/pages/get_started_page.dart';
 import 'package:vision_parse/pages/home_page.dart';
 import 'package:vision_parse/pages/extract_page.dart';
+import 'package:vision_parse/pages/settings_page.dart';
+import 'package:vision_parse/utils/shared_preferences_manager.dart';
 import 'package:vision_parse/widgets/full_screen_image_screen.dart';
 import 'package:vision_parse/widgets/image_detail_page.dart';
+import 'package:vision_parse/widgets/shell_ui.dart';
 
 final GoRouter router = GoRouter(
-  initialLocation: '/',
+  // This is the initial route of the app
+  initialLocation: GetStartedPage.path,
   redirect: (context, state) {
-    // final supabase = serviceLocator<SupabaseClient>();
-    // final supabaseSession = supabase.auth.currentSession;
+    final supabase = serviceLocator<SupabaseClient>();
+    final supabaseSession = supabase.auth.currentSession;
+    final isGuest = serviceLocator<SharedPreferencesManager>().getIsGuest() ?? false;
+    print('Redirecting: isGuest: $isGuest, supabaseSession: ${supabaseSession != null}');
 
-
-    // supabase.auth.signInWithPassword(password: password, email: email);
-
-    // supabase.rpc('get_subscription_by_email', params: {
-    //   'p_email': supabase.auth.currentUser?.email,
-    // });
-    
-    // if (supabaseSession == null) {
-    //   return '/login';
-    // }
-    // return null;
+    // if the user is a guest or has a valid Supabase session, redirect to HomePage instead of GetStartedPage
+    if ((isGuest || supabaseSession != null) && state.uri.path.contains(GetStartedPage.path)) {
+      return HomePage.path;
+    }
+    return null;
   },
   routes: [
     GoRoute(
-      path: '/',
-      builder: (context, state) => const HomePage(),
+      name: GetStartedPage.pathName,
+      path: GetStartedPage.path,
+      builder: (context, state) => const GetStartedPage(),
     ),
+    StatefulShellRoute.indexedStack(
+      branches: [
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: HomePage.path,
+              name: HomePage.pathName,
+              pageBuilder: (context, state) => NoTransitionPage(child: const HomePage()),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              name: 'settings',
+              path: '/settings',
+              pageBuilder: (context, state) => NoTransitionPage(child: const SettingsPage()),
+            ),
+          ],
+        )
+      ],
+      builder: (context, state, navigationShell) => ShellUi(navigationShell: navigationShell),
+    ),
+    // route with the result of the image extraction
     GoRoute(
       path: '/extract',
       builder: (context, state) {
@@ -46,6 +73,7 @@ final GoRouter router = GoRouter(
         return FullscreenImageScreen(imageUrl: imageUrl, tag: tag);
       },
     ),
+    // route for displaying image details when an image is tapped
     GoRoute(
       path: '/image-detail',
       builder: (context, state) {

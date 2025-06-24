@@ -4,6 +4,9 @@ import 'package:vision_parse/widgets/sliver_appbar.dart';
 import 'package:vision_parse/widgets/analyze_tab.dart';
 
 class HomePage extends StatelessWidget {
+  static const String pathName = 'HomePage';
+  static const String path = '/home';
+  
   const HomePage({super.key});
 
   @override

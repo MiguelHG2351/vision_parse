@@ -1,0 +1,4 @@
+enum NavigatorPage {
+  home,
+  settings
+}

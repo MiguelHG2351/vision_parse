@@ -21,7 +21,7 @@ class SliverAppbar extends SliverPersistentHeaderDelegate {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'OCR Vision',
+                      'Vision Parse',
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
