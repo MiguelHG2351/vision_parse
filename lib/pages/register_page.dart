@@ -24,7 +24,7 @@ class RegisterPage extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           width: double.infinity,
           constraints: const BoxConstraints(maxWidth: 500),
-          child: Form(
+          child: SingleChildScrollView(
             key: _formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
