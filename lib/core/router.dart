@@ -10,6 +10,7 @@ import 'package:vision_parse/utils/shared_preferences_manager.dart';
 import 'package:vision_parse/widgets/full_screen_image_screen.dart';
 import 'package:vision_parse/widgets/image_detail_page.dart';
 import 'package:vision_parse/widgets/shell_ui.dart';
+import 'package:vision_parse/pages/register_page.dart';
 
 final GoRouter router = GoRouter(
   // This is the initial route of the app
@@ -36,6 +37,11 @@ final GoRouter router = GoRouter(
       name: SigninPage.pathName,
       path: SigninPage.path,
       builder: (context, state) => const SigninPage(),
+    ),
+    GoRoute(
+      name: RegisterPage.pathName,
+      path: RegisterPage.path,
+      builder: (context, state) => const RegisterPage(),
     ),
     StatefulShellRoute.indexedStack(
       branches: [
