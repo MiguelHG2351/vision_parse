@@ -56,12 +56,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         email: event.email,
         password: event.password,
       );
-      final user = await serviceLocator<SupabaseClient>().rpc('get_user_profile').single();
+      // final user = await serviceLocator<SupabaseClient>().rpc('get_user_profile').single();
       // por si acaso
       serviceLocator<SharedPreferencesManager>().setIsGuest(false);
       emit(state.copyWith(
         emailLoginProgressStatus: RequestProgressStatus.success,
-        profile: Profile.fromJson(user),
+        // profile: Profile.fromJson(user),
       ));
     } on AuthException catch (e) {
       emit(state.copyWith(

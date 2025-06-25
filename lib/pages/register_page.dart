@@ -108,6 +108,7 @@ class RegisterPage extends StatelessWidget {
                             await supabase.auth.signUp(
                               email: email,
                               password: password,
+                              emailRedirectTo: 'visionparse://auth/sign-in',
                             );
 
                             if (context.mounted) {
