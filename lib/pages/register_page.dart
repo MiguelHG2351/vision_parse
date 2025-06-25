@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:vision_parse/pages/get_started_page.dart';
-import 'package:vision_parse/pages/home_page.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -14,66 +14,72 @@ class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
+    final confirmPasswordController = TextEditingController();
 
     return Scaffold(
       body: Center(
         child: Container(
           padding: const EdgeInsets.all(20),
           width: double.infinity,
-          constraints: BoxConstraints(maxWidth: 400),
+          constraints: const BoxConstraints(maxWidth: 500),
           child: Form(
-            key:
-                _formKey, // with the key you can use _formKey.currentState?.validate() to check if all fields are valid
+            key: _formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // .asset is used to load an image from the assets folder
-                 Image.asset(
+                Image.asset(
                   'assets/images/pingu-login.png',
                   width: 100,
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Text(
                   'Bienvenido a vision parse!',
                   style: textTheme.displaySmall?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                const SizedBox(height: 10),
+
                 TextFormField(
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
+                  controller: emailController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
                     hintText: 'Introduce tu correo',
                   ),
-                  // Autovalidate mode to validate fields when the user interacts with them, f.g. when they focus on the field or change its value
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Ingresa tu correo';
-                    } else if (!RegExp(
-                      r'^[^@]+@[^@]+\.[^@]+',
-                    ).hasMatch(value)) {
+                    } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
                       return 'Introduce un correo válido';
                     }
                     return null;
                   },
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
+
                 TextFormField(
-                  decoration: InputDecoration(
+                  controller: passwordController,
+                  decoration: const InputDecoration(
                     hintText: 'Introduce tu nueva contraseña',
-                    border: const OutlineInputBorder(),
+                    border: OutlineInputBorder(),
                   ),
                   obscureText: true,
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
+
                 TextFormField(
-                  decoration: InputDecoration(
+                  controller: confirmPasswordController,
+                  decoration: const InputDecoration(
                     hintText: 'Confirma tu contraseña',
-                    border: const OutlineInputBorder(),
+                    border: OutlineInputBorder(),
                   ),
                   obscureText: true,
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
+
                 Row(
                   children: [
                     Expanded(
@@ -82,16 +88,49 @@ class RegisterPage extends StatelessWidget {
                           backgroundColor: Theme.of(context).primaryColor,
                           foregroundColor: Colors.white,
                         ),
-                        onPressed: () {
-                          context.goNamed(HomePage.pathName);
+                        onPressed: () async {
+                          if (!_formKey.currentState!.validate()) return;
+
+                          final email = emailController.text.trim();
+                          final password = passwordController.text.trim();
+                          final confirmPassword = confirmPasswordController.text.trim();
+
+                          if (password != confirmPassword) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Las contraseñas no coinciden')),
+                            );
+                            return;
+                          }
+
+                          try {
+                            final supabase = Supabase.instance.client;
+
+                            await supabase.auth.signUp(
+                              email: email,
+                              password: password,
+                            );
+
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Se ha enviado un enlace de confirmación a tu correo.'),
+                                ),
+                              );
+                              context.goNamed(GetStartedPage.pathName);
+                            }
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Error al registrar: $e')),
+                            );
+                          }
                         },
                         child: const Text('Registrar usuario'),
                       ),
                     ),
                   ],
-                  
                 ),
-                 Row(
+                const SizedBox(height: 10),
+                Row(
                   children: [
                     Expanded(
                       child: ElevatedButton(
