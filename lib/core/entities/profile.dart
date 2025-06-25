@@ -39,23 +39,13 @@ class Profile extends Equatable {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'email': email,
-      'firstName': firstName,
-      'lastName': lastName,
-      'avatarUrl': avatarUrl,
-    };
-  }
-
   factory Profile.fromJson(Map<String, dynamic> json) {
     return Profile(
       id: json['id'] as String,
       email: json['email'] as String,
-      firstName: json['firstName'] as String,
-      lastName: json['lastName'] as String,
-      avatarUrl: json['avatarUrl'] as String,
+      firstName: json['first_name'] as String,
+      lastName: json['last_name'] as String,
+      avatarUrl: json['avatar'] ?? '',
     );
   }
 
