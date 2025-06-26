@@ -3,12 +3,15 @@ import 'package:go_router/go_router.dart';
 import 'package:vision_parse/core/get_it.dart';
 import 'package:vision_parse/pages/get_started_page.dart';
 import 'package:vision_parse/pages/signin_page.dart';
+import 'package:vision_parse/pages/subscription_page.dart';
 import 'package:vision_parse/utils/shared_preferences_manager.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vision_parse/core/entities/profile.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
+  static const String pathName = 'settings';
+  static const String path = '/settings';
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -152,16 +155,15 @@ class _SettingsPageState extends State<SettingsPage> {
                   SliverList(
                     delegate: SliverChildListDelegate([
                       ListTile(
+                        onTap: () {
+                          context.goNamed(SubscriptionPage.pathName);
+                        },
                         leading: const Icon(Icons.settings),
-                        title: const Text('Option 1'),
-                      ),
-                      ListTile(
-                        leading: const Icon(Icons.info),
-                        title: const Text('Option 2'),
+                        title: const Text('Mejorar a premium'),
                       ),
                       ListTile(
                         leading: const Icon(Icons.help),
-                        title: const Text('Option 3'),
+                        title: const Text('Ayuda'),
                       ),
                     ]),
                   ),

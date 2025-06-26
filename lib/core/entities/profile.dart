@@ -27,7 +27,6 @@ class Profile extends Equatable {
     String? email,
     String? firstName,
     String? lastName,
-    String? nationalId,
     String? avatarUrl,
   }) {
     return Profile(

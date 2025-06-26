@@ -6,6 +6,7 @@ import 'package:vision_parse/pages/home_page.dart';
 import 'package:vision_parse/pages/extract_page.dart';
 import 'package:vision_parse/pages/settings_page.dart';
 import 'package:vision_parse/pages/signin_page.dart';
+import 'package:vision_parse/pages/subscription_page.dart';
 import 'package:vision_parse/utils/shared_preferences_manager.dart';
 import 'package:vision_parse/widgets/full_screen_image_screen.dart';
 import 'package:vision_parse/widgets/image_detail_page.dart';
@@ -59,14 +60,19 @@ final GoRouter router = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              name: 'settings',
-              path: '/settings',
+              name: SettingsPage.pathName,
+              path: SettingsPage.path,
               pageBuilder: (context, state) => NoTransitionPage(child: const SettingsPage()),
             ),
           ],
         )
       ],
       builder: (context, state, navigationShell) => ShellUi(navigationShell: navigationShell),
+    ),
+    GoRoute(
+      path: SubscriptionPage.path,
+      name: SubscriptionPage.pathName,
+      builder: (context, state) => const SubscriptionPage(),
     ),
     // route with the result of the image extraction
     GoRoute(
