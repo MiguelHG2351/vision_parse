@@ -18,63 +18,31 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
   File? _selectedImage;
   File? _originalImage;
   bool isProcessing = false;
-  RewardedAd? _rewardedAd;
-
-  void _createRewardedAd() {
-    RewardedAd.load(
-      adUnitId: AppAds.rewardedAdUnitId,
-      request: const AdRequest(),
-      rewardedAdLoadCallback: RewardedAdLoadCallback(
-        onAdLoaded: (ad) {
-          setState(() {
-            _rewardedAd = ad;
-          });
-        },
-        onAdFailedToLoad: (error) {
-          _rewardedAd?.dispose();
-          debugPrint('RewardedAd failed to load: $error');
-        },
-      ),
-    );
-  }
-
-  void _showRewardedAd() {
-    if (_rewardedAd != null) {
-      _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
-        onAdShowedFullScreenContent: (ad) {
-          debugPrint('Rewarded ad showed full screen content.');
-        },
-        onAdDismissedFullScreenContent: (ad) {
-          debugPrint('Rewarded ad dismissed full screen content.');
-          ad.dispose();
-          _createRewardedAd(); // Load a new ad after the current one is dismissed
-        },
-        onAdFailedToShowFullScreenContent: (ad, error) {
-          debugPrint('Rewarded ad failed to show full screen content: $error');
-          ad.dispose();
-          _createRewardedAd(); // Load a new ad if the current one fails to show
-        },
-      );
-
-      _rewardedAd!.show(
-        onUserEarnedReward: (ad, reward) {
-          debugPrint('User earned reward: ${reward.amount} ${reward.type}');
-          // Handle the reward here, e.g., give the user some points or benefits
-        },
-      );
-      debugPrint('Rewarded ad is showing.');
-      _rewardedAd = null; // Set to null after showing to avoid multiple shows
-    } else {
-      debugPrint('Rewarded ad is not ready yet.');
-    }
-  }
+  InterstitialAd? _interstitialAd;
 
   @override
   void initState() {
     super.initState();
-    _createRewardedAd();
+    _createInterstitialAd();
   }
 
+  void _createInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: AppAds.interstitialAdUnitId,
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          setState(() {
+            _interstitialAd = ad;
+          });
+        },
+        onAdFailedToLoad: (error) {
+          _interstitialAd?.dispose();
+          debugPrint('InterstitialAd failed to load: $error');
+        },
+      ),
+    );
+  }
 
   // AI Methods
   Future<void> _pickImageFromGallery() async {
@@ -129,7 +97,7 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
 
   @override
   void dispose() {
-    _rewardedAd?.dispose();
+    _interstitialAd?.dispose();
     super.dispose();
   }
 
@@ -196,7 +164,11 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
                 SizedBox(height: 16),
                 TextButton(
                   onPressed: () {
-                    _showRewardedAd();
+                    if (_interstitialAd != null) {
+                      _interstitialAd!.show();
+                    } else {
+                      debugPrint('Interstitial ad is not ready yet.');
+                    }
                   },
                   child: Text('Show ad')
                 ),
