@@ -6,12 +6,17 @@ import 'package:vision_parse/pages/register_page.dart';
 import 'package:vision_parse/pages/signin_page.dart';
 import 'package:vision_parse/utils/shared_preferences_manager.dart';
 
-class GetStartedPage extends StatelessWidget {
+class GetStartedPage extends StatefulWidget {
   static const String pathName = 'GetStartedPage';
   static const String path = '/get-started';
 
   const GetStartedPage({super.key});
 
+  @override
+  State<GetStartedPage> createState() => _GetStartedPageState();
+}
+
+class _GetStartedPageState extends State<GetStartedPage> {  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

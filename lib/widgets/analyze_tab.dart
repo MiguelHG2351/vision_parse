@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:vision_parse/utils/app_ads.dart';
 import '../utils/image_picker_helper.dart';
 import 'dart:io';
 
@@ -16,7 +18,65 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
   File? _selectedImage;
   File? _originalImage;
   bool isProcessing = false;
+  RewardedAd? _rewardedAd;
 
+  void _createRewardedAd() {
+    RewardedAd.load(
+      adUnitId: AppAds.rewardedAdUnitId,
+      request: const AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: (ad) {
+          setState(() {
+            _rewardedAd = ad;
+          });
+        },
+        onAdFailedToLoad: (error) {
+          _rewardedAd?.dispose();
+          debugPrint('RewardedAd failed to load: $error');
+        },
+      ),
+    );
+  }
+
+  void _showRewardedAd() {
+    if (_rewardedAd != null) {
+      _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
+        onAdShowedFullScreenContent: (ad) {
+          debugPrint('Rewarded ad showed full screen content.');
+        },
+        onAdDismissedFullScreenContent: (ad) {
+          debugPrint('Rewarded ad dismissed full screen content.');
+          ad.dispose();
+          _createRewardedAd(); // Load a new ad after the current one is dismissed
+        },
+        onAdFailedToShowFullScreenContent: (ad, error) {
+          debugPrint('Rewarded ad failed to show full screen content: $error');
+          ad.dispose();
+          _createRewardedAd(); // Load a new ad if the current one fails to show
+        },
+      );
+
+      _rewardedAd!.show(
+        onUserEarnedReward: (ad, reward) {
+          debugPrint('User earned reward: ${reward.amount} ${reward.type}');
+          // Handle the reward here, e.g., give the user some points or benefits
+        },
+      );
+      debugPrint('Rewarded ad is showing.');
+      _rewardedAd = null; // Set to null after showing to avoid multiple shows
+    } else {
+      debugPrint('Rewarded ad is not ready yet.');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _createRewardedAd();
+  }
+
+
+  // AI Methods
   Future<void> _pickImageFromGallery() async {
     final result = await ImagePickerHelper.pickImageFromGallery();
     if (result != null) {
@@ -69,6 +129,7 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
 
   @override
   void dispose() {
+    _rewardedAd?.dispose();
     super.dispose();
   }
 
@@ -133,6 +194,12 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
                     ],
                   ),
                 SizedBox(height: 16),
+                TextButton(
+                  onPressed: () {
+                    _showRewardedAd();
+                  },
+                  child: Text('Show ad')
+                ),
                 if (_selectedImage == null)
                   Row(
                     children: [
