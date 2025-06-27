@@ -160,7 +160,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           context.goNamed(SubscriptionPage.pathName);
                         },
                         leading: const Icon(Icons.settings),
-                        title: const Text('Mejorar a premium'),
+                        title: Text((profile?.paymentMethod != null && profile!.paymentMethod.isNotEmpty) ? 'Ya eres premium' : 'Mejorar a premium'),
                       ),
                       ListTile(
                         leading: const Icon(Icons.help),
