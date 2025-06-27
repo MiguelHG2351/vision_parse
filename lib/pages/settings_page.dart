@@ -112,43 +112,59 @@ class _SettingsPageState extends State<SettingsPage> {
               : CustomScrollView(
                 slivers: [
                   SliverToBoxAdapter(
-                    child: Card(
-                      margin: const EdgeInsets.all(24),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                              radius: 32,
-                              backgroundImage:
-                                  profile?.avatarUrl.isNotEmpty == true
-                                      ? NetworkImage(profile!.avatarUrl)
-                                      : null,
-                              child:
-                                  profile?.avatarUrl.isEmpty == true
-                                      ? const Icon(Icons.person, size: 32)
-                                      : null,
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
+                    child: InkWell(
+                      onTap: () {
+                        context.goNamed('completeProfile'); // Asegúrate que 'completeProfile' coincida con el nombre de ruta que definiste
+                      },
+                      borderRadius: BorderRadius.circular(12), // efecto de toque redondeado
+                      child: Card(
+                        margin: const EdgeInsets.all(24),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 32,
+                                backgroundImage: profile?.avatarUrl.isNotEmpty == true
+                                    ? NetworkImage(profile!.avatarUrl)
+                                    : null,
+                                child: profile?.avatarUrl.isEmpty == true
+                                    ? const Icon(Icons.person, size: 32)
+                                    : null,
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${profile?.firstName ?? ''} ${profile?.lastName ?? ''}',
+                                      style: Theme.of(context).textTheme.titleMedium,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      profile?.email ?? '',
+                                      style: Theme.of(context).textTheme.bodyMedium,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Column(
+                                children: const [
+                                  Icon(Icons.edit, size: 20, color: Colors.grey),
+                                  SizedBox(height: 4),
                                   Text(
-                                    '${profile?.firstName ?? ''} ${profile?.lastName ?? ''}',
-                                    style:
-                                        Theme.of(context).textTheme.titleMedium,
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    profile?.email ?? '',
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium,
+                                    'Editar',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                    ),
                                   ),
                                 ],
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),

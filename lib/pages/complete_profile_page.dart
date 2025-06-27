@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:vision_parse/pages/settings_page.dart';
 import 'home_page.dart';
 
 class CompleteProfilePage extends StatefulWidget {
@@ -17,6 +18,46 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
   final _formKey = GlobalKey<FormState>();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
+
+  String _initialFirstName = '';
+  String _initialLastName = '';
+  bool _isModified = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfileData();
+    _firstNameController.addListener(_checkIfModified);
+    _lastNameController.addListener(_checkIfModified);
+  }
+
+  void _checkIfModified() {
+    final isNowModified = _firstNameController.text.trim() != _initialFirstName ||
+        _lastNameController.text.trim() != _initialLastName;
+    if (isNowModified != _isModified) {
+      setState(() {
+        _isModified = isNowModified;
+      });
+    }
+  }
+
+  Future<void> _loadProfileData() async {
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+    if (userId == null) return;
+
+    final response = await Supabase.instance.client
+        .from('profiles')
+        .select('first_name, last_name')
+        .eq('id', userId)
+        .single();
+
+    setState(() {
+      _initialFirstName = response['first_name'] ?? '';
+      _initialLastName = response['last_name'] ?? '';
+      _firstNameController.text = _initialFirstName;
+      _lastNameController.text = _initialLastName;
+    });
+  }
 
   @override
   void dispose() {
@@ -44,7 +85,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
           .eq('id', userId);
 
       if (context.mounted) {
-        context.goNamed(HomePage.pathName);
+        context.goNamed(SettingsPage.pathName);
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -71,7 +112,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Ingresa tu nombre o apellido al menos';
+                    return 'Necesitas un nombre por lo menos, el apellido es opcional';
                   }
                   return null;
                 },
@@ -85,9 +126,28 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                 ),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _submit,
-                child: const Text('Guardar y continuar'),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: _isModified ? _submit : null,
+                      child: const Text('Guardar y continuar'),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        context.go('/settings');
+                      },
+                      child: const Text('Cancelar'),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
