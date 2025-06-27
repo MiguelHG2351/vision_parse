@@ -12,6 +12,10 @@ class AuthEmailLoginEvent extends AuthEvent {
   });
 }
 
+class AuthRefreshSession extends AuthEvent {
+  AuthRefreshSession();
+}
+
 class AuthCheckSession extends AuthEvent {
   AuthCheckSession();
 }

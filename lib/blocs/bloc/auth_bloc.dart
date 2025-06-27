@@ -42,6 +42,19 @@ extension RequestProgressStatusExtension on RequestProgressStatus {
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthState()) {
     on<AuthEmailLoginEvent>(_onAuthEmailLoginEvent);
+    on<AuthRefreshSession>(_onAuthRefreshSession);
+  }
+
+  void _onAuthRefreshSession(AuthRefreshSession event, Emitter<AuthState> emit) async {
+    emit(state.copyWith(
+      emailLoginProgressStatus: RequestProgressStatus.loading,
+    ));
+    final profile = await serviceLocator<SupabaseClient>().rpc('get_user_profile').single();
+    emit(state.copyWith(
+      profile: Profile.fromJson(profile),
+      emailLoginProgressStatus: RequestProgressStatus.success,
+      emailErrorMessage: '',
+    ));
   }
 
   void _onAuthEmailLoginEvent(
@@ -56,12 +69,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         email: event.email,
         password: event.password,
       );
-      // final user = await serviceLocator<SupabaseClient>().rpc('get_user_profile').single();
+      final user = await serviceLocator<SupabaseClient>().rpc('get_user_profile').single();
       // por si acaso
       serviceLocator<SharedPreferencesManager>().setIsGuest(false);
       emit(state.copyWith(
         emailLoginProgressStatus: RequestProgressStatus.success,
-        // profile: Profile.fromJson(user),
+        profile: Profile.fromJson(user),
       ));
     } on AuthException catch (e) {
       emit(state.copyWith(

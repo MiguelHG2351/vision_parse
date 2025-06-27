@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:vision_parse/blocs/bloc/auth_bloc.dart';
 import 'package:vision_parse/core/get_it.dart';
 import 'package:vision_parse/pages/get_started_page.dart';
 import 'package:vision_parse/pages/home_page.dart';
@@ -24,6 +25,7 @@ final GoRouter router = GoRouter(
 
     // if the user is a guest or has a valid Supabase session, redirect to HomePage instead of GetStartedPage
     if ((isGuest || supabaseSession != null) && state.uri.path.contains(GetStartedPage.path)) {
+      serviceLocator<AuthBloc>().add(AuthRefreshSession());
       return HomePage.path;
     }
     return null;

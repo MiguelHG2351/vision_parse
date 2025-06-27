@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:vision_parse/core/get_it.dart';
 import 'package:vision_parse/pages/get_started_page.dart';
-import 'package:vision_parse/pages/signin_page.dart';
 import 'package:vision_parse/pages/subscription_page.dart';
 import 'package:vision_parse/utils/shared_preferences_manager.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -25,7 +24,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
-    isGuest = serviceLocator<SharedPreferencesManager>().getIsGuest() ?? false;
+    isGuest = serviceLocator<SupabaseClient>().auth.currentSession == null;
     if (!isGuest) {
       fetchProfile();
     }

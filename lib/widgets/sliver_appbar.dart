@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 
 class SliverAppbar extends SliverPersistentHeaderDelegate {
+  const SliverAppbar({
+    required TabController tabController,
+  }) : _tabController = tabController;
+
+  final TabController _tabController;
+
   @override
   Widget build(
     BuildContext context,
@@ -27,9 +33,13 @@ class SliverAppbar extends SliverPersistentHeaderDelegate {
                       ),
                     ),
                     TabBar(
+                      controller: _tabController,
                       tabs: [
                         Tab(icon: Icon(Icons.camera), child: Text('Analizar')),
-                        Tab(icon: Icon(Icons.history), child: Text('Historial')),
+                        Tab(
+                          icon: Icon(Icons.history),
+                          child: Text('Historial')
+                        ),
                       ],
                     ),
                   ],
