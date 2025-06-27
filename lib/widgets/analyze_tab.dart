@@ -129,83 +129,51 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
                 else
                   Column(
                     children: [
-                      SvgPicture.asset(
-                        'assets/icons/camera_icon.svg',
-                        width: 60,
-                        height: 60,
+                      Icon(
+                        Icons.camera, // o Icons.camera_enhance si prefieres
+                        size: 60,
+                        color: Colors.grey, // Puedes ajustar el color según tu diseño
                       ),
+                      const SizedBox(height: 12),
                       Text(
                         'Captura o selecciona una imagen',
-                        style: Theme.of(context).textTheme.bodyLarge,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[700],
+                        ),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
-                        'Toma una foto o selecciona una imagen de tu galería',
+                        'Captura una foto o selecciona una imagen desde tu galería para extraer texto.',
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.bodyLarge,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Colors.grey[600],
+                        )
                       ),
                     ],
                   ),
                 SizedBox(height: 16),
                 if (_selectedImage == null)
-                 Row(
+                  Row(
                     children: [
                       Expanded(
-                        child: GestureDetector(
-                          onTap: _takePhoto,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 242, 167, 63),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.camera_alt, size: 60, color: Colors.black),
-                                SizedBox(height: 8),
-                                Text(
-                                  'Tomar fotografía',
-                                  style: TextStyle(
-                                    color: Colors.black87,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                        child: _BotonImagen(
+                          icono: Icons.camera_alt_outlined,
+                          texto: 'Tomar fotografía',
+                          onPressed: _takePhoto,
                         ),
                       ),
-                      SizedBox(width: 16),
+                      const SizedBox(width: 16),
                       Expanded(
-                        child: GestureDetector(
-                          onTap: () {
+                        child: _BotonImagen(
+                          icono: Icons.photo_library_outlined,
+                          texto: 'Elegir de galería',
+                          onPressed: () {
                             if (widget.interstitialAd != null) {
                               widget.interstitialAd!.show();
                             }
                             _pickImageFromGallery();
                           },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 242, 167, 63),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.photo, size: 60, color: Colors.black),
-                                SizedBox(height: 8),
-                                Text(
-                                  'Elegir de galería',
-                                  style: TextStyle(
-                                    color: Colors.black87,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
                         ),
                       ),
                     ],
@@ -298,6 +266,58 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _BotonImagen extends StatelessWidget {
+  final IconData icono;
+  final String texto;
+  final VoidCallback onPressed;
+
+  const _BotonImagen({
+    required this.icono,
+    required this.texto,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        shadowColor: Colors.deepOrange,
+        elevation: 6,
+        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icono, size: 80, color: Colors.orange),
+          const SizedBox(height: 10),
+          Text(
+            texto,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w400,
+              color: Colors.orange,
+              shadows: [
+                Shadow(
+                  offset: Offset(1.0, 1.0),
+                  blurRadius: 0,
+                  color: Colors.black26,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
