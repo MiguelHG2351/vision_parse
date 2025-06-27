@@ -38,10 +38,10 @@ class SliverAppbar extends SliverPersistentHeaderDelegate {
                     TabBar(
                       controller: _tabController,
                       tabs: [
-                        Tab(icon: Icon(Icons.camera), child: Text('Analizar')),
+                        Tab(icon: Icon(Icons.camera_enhance_outlined, size: 30), child: Text('Escanear texto')),
                         Tab(
-                          icon: Icon(Icons.history),
-                          child: Text('Historial')
+                          icon: Icon(Icons.history_outlined, size: 30),
+                          child: Text('Historial de escaneos'),
                         ),
                       ],
                     ),

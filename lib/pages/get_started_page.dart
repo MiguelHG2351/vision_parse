@@ -20,7 +20,16 @@ class _GetStartedPageState extends State<GetStartedPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Get Started')),
+      appBar: AppBar( 
+      title: const Text('Bienvenido a Vision Parse'),
+      leading: Icon(Icons.text_fields, color: Colors.white), 
+        backgroundColor: const Color.fromARGB(255, 215, 119, 40), // Cambia el color aquí
+        titleTextStyle: TextStyle(
+          fontSize: 20, // Cambia el tamaño aquí
+          fontWeight: FontWeight.bold,
+          color: Colors.white, // Cambia el color del texto del AppBar
+        ),
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -28,32 +37,55 @@ class _GetStartedPageState extends State<GetStartedPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'How would you like to continue?',
-                style: Theme.of(context).textTheme.titleLarge,
+                'Elige como quieres continuar',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontSize: 24, // Cambia el tamaño aquí
+                  fontWeight: FontWeight.w400,
+                  color: const Color.fromARGB(255, 160, 43, 0), // Cambia el color aquí
+                ),
                 textAlign: TextAlign.center,
+              
               ),
               const SizedBox(height: 32),
-              ElevatedButton(
+              ElevatedButton.icon(
                 onPressed: () {
                   serviceLocator<SharedPreferencesManager>().setIsGuest(true);
                   context.goNamed(HomePage.pathName);
                 },
-                child: const Text('Continue as Guest'),
+                icon: const Icon(Icons.person_2_outlined, size:30, color: Color.fromARGB(255, 160, 43, 0)), // Puedes cambiar el ícono
+                label: const Text('Continuar como invitado',
+                  style: TextStyle(
+                    fontSize: 18,         // Cambia el tamaño aquí
+                    fontWeight: FontWeight.w500,
+                    color: Color.fromARGB(255, 160, 43, 0) // Opcional
+                  ),),
               ),
-              const SizedBox(height: 16),
-              ElevatedButton(
+              const SizedBox(height: 32),
+              ElevatedButton.icon(
                 onPressed: () {
                   //hacer register
                   context.goNamed(RegisterPage.pathName);
                 },
-                child: const Text('Register'),
+                 icon: const Icon(Icons.person_add_alt, size:30, color: Color.fromARGB(255, 160, 43, 0)), // Puedes cambiar el ícono
+                label: const Text('Registrarme',
+                  style: TextStyle(
+                    fontSize: 18,         // Cambia el tamaño aquí
+                    fontWeight: FontWeight.w500,
+                    color: Color.fromARGB(255, 160, 43, 0) // Opcional
+                  ),),
               ),
-              const SizedBox(height: 16),
-              ElevatedButton(
+              const SizedBox(height: 32),
+              ElevatedButton.icon(
                 onPressed: () {
                   context.goNamed(SigninPage.pathName);
                 },
-                child: const Text('Login'),
+                 icon: const Icon(Icons.login, size:30, color: Color.fromARGB(255, 160, 43, 0)), // Puedes cambiar el ícono
+                label: const Text('Iniciar sesión',
+                  style: TextStyle(
+                    fontSize: 18,         // Cambia el tamaño aquí
+                    fontWeight: FontWeight.w500,
+                    color: Color.fromARGB(255, 160, 43, 0) // Opcional
+                  ),),
               ),
             ],
           ),

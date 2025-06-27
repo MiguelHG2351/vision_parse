@@ -130,24 +130,24 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
                   Column(
                     children: [
                       Icon(
-                        Icons.camera, // o Icons.camera_enhance si prefieres
+                        Icons.camera_enhance, // o Icons.camera_enhance si prefieres
                         size: 60,
-                        color: Colors.grey, // Puedes ajustar el color según tu diseño
+                        color: const Color.fromARGB(255, 196, 154, 141),
                       ),
                       const SizedBox(height: 12),
                       Text(
                         'Captura o selecciona una imagen',
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: Colors.grey[700],
+                          color: Colors.grey[1000],
                         ),
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Captura una foto o selecciona una imagen desde tu galería para extraer texto.',
+                        'Captura una foto o selecciona una imagen desde tu galería para escanear y extraer texto.',
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey[600],
+                          color: Colors.grey[1000],
                         )
                       ),
                     ],
@@ -288,25 +288,25 @@ class _BotonImagen extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
-        shadowColor: Colors.deepOrange,
+        shadowColor: const Color.fromARGB(255, 255, 128, 0),
         elevation: 6,
         padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(5),
         ),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icono, size: 80, color: Colors.orange),
+          Icon(icono, size: 80, color: Color.fromARGB(255, 255, 122, 34)),
           const SizedBox(height: 10),
           Text(
             texto,
             textAlign: TextAlign.center,
             style: const TextStyle(
-              fontSize: 20,
+              fontSize: 23,
               fontWeight: FontWeight.w400,
-              color: Colors.orange,
+              color: Color.fromARGB(255, 255, 122, 34),
               shadows: [
                 Shadow(
                   offset: Offset(1.0, 1.0),

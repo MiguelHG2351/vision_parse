@@ -176,7 +176,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> with WidgetsBinding
                                         ),
                                       );
                                     },
-                                    child: const Text('Upgrade to Premium'),
+                                    child: const Text('Actualizar a Premium'),
                                   )
                                 ],
                               ),

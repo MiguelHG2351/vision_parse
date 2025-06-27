@@ -57,7 +57,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: const Text('Ajustes'),
         actions:
             isGuest
                 ? []
@@ -83,7 +83,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'You are currently using the app as a guest.',
+                                'Estás usando la app como invitado.',
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
                               const SizedBox(height: 8),
@@ -97,7 +97,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                   // Navigate to login or registration page
                                   context.goNamed(GetStartedPage.pathName);
                                 },
-                                child: const Text('Login / Register'),
+                                child: const Text('Iniciar sesión o registrarse'),
                               ),
                             ],
                           ),
@@ -152,13 +152,13 @@ class _SettingsPageState extends State<SettingsPage> {
                               const SizedBox(width: 8),
                               Column(
                                 children: const [
-                                  Icon(Icons.edit, size: 20, color: Colors.grey),
+                                  Icon(Icons.edit, size: 20, color: Colors.black87),
                                   SizedBox(height: 4),
                                   Text(
                                     'Editar',
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: Colors.grey,
+                                      color: Colors.black87,
                                     ),
                                   ),
                                 ],

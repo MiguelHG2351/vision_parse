@@ -41,7 +41,11 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.orangeAccent,
+            primary: const Color.fromARGB(255, 230, 119, 0),
+            secondary: Colors.amber,
+          ),
         ),
         routerConfig: router,
       ),

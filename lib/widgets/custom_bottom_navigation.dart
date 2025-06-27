@@ -49,17 +49,25 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> {
     return BottomNavigationBar(
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: Icon(Icons.home),
+          icon: Icon(Icons.home, size: 40),
           label: 'Inicio',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.settings),
-          label: 'Configuraciones',
+          icon: Icon(Icons.settings, size:40),
+          label: 'Ajustes',
+
         ),
       ],
       currentIndex: _selectedIndex,
-      selectedItemColor: colorScheme.primary,
+      selectedItemColor: Colors.deepOrangeAccent,
       unselectedItemColor: colorScheme.onSurface.withValues(alpha: 0.5),
+      selectedLabelStyle: const TextStyle(
+        fontSize: 16, // ← Tamaño para el ítem seleccionado
+        fontWeight: FontWeight.bold,
+      ),
+      unselectedLabelStyle: const TextStyle(
+          fontSize: 14, // ← Tamaño para los ítems no seleccionados
+      ),
       onTap: _onItemTapped, // This function is called when an item is tapped
     );
   }
