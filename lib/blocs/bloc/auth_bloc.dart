@@ -46,10 +46,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   void _onAuthRefreshSession(AuthRefreshSession event, Emitter<AuthState> emit) async {
+    emit(state.copyWith(
+      emailLoginProgressStatus: RequestProgressStatus.loading,
+    ));
     final profile = await serviceLocator<SupabaseClient>().rpc('get_user_profile').single();
     emit(state.copyWith(
       profile: Profile.fromJson(profile),
-      emailLoginProgressStatus: RequestProgressStatus.nothing,
+      emailLoginProgressStatus: RequestProgressStatus.success,
       emailErrorMessage: '',
     ));
   }

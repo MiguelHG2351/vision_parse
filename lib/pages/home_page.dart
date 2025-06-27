@@ -56,6 +56,8 @@ class _HomePageState extends State<HomePage>
     super.initState();
     _tabController = TabController(vsync: this, length: 2);
     _tabController.addListener(onTap);
+    final isPremium = context.read<AuthBloc>().state.profile.paymentMethod.isNotEmpty;
+    _isDisabled = [false, !isPremium];
   }
 
   @override
