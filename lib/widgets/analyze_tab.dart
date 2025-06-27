@@ -8,7 +8,12 @@ import '../utils/image_picker_helper.dart';
 import 'dart:io';
 
 class AnalyzeTab extends StatefulWidget {
-  const AnalyzeTab({super.key});
+  const AnalyzeTab({
+    super.key,
+    this.interstitialAd
+  });
+
+  final InterstitialAd? interstitialAd;
 
   @override
   State<AnalyzeTab> createState() => _AnalyzeTabState();
@@ -18,30 +23,10 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
   File? _selectedImage;
   File? _originalImage;
   bool isProcessing = false;
-  InterstitialAd? _interstitialAd;
 
   @override
   void initState() {
     super.initState();
-    _createInterstitialAd();
-  }
-
-  void _createInterstitialAd() {
-    InterstitialAd.load(
-      adUnitId: AppAds.interstitialAdUnitId,
-      request: const AdRequest(),
-      adLoadCallback: InterstitialAdLoadCallback(
-        onAdLoaded: (ad) {
-          setState(() {
-            _interstitialAd = ad;
-          });
-        },
-        onAdFailedToLoad: (error) {
-          _interstitialAd?.dispose();
-          debugPrint('InterstitialAd failed to load: $error');
-        },
-      ),
-    );
   }
 
   // AI Methods
@@ -97,7 +82,7 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
 
   @override
   void dispose() {
-    _interstitialAd?.dispose();
+    widget.interstitialAd?.dispose();
     super.dispose();
   }
 
@@ -162,16 +147,6 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
                     ],
                   ),
                 SizedBox(height: 16),
-                TextButton(
-                  onPressed: () {
-                    if (_interstitialAd != null) {
-                      _interstitialAd!.show();
-                    } else {
-                      debugPrint('Interstitial ad is not ready yet.');
-                    }
-                  },
-                  child: Text('Show ad')
-                ),
                 if (_selectedImage == null)
                   Row(
                     children: [
@@ -202,7 +177,14 @@ class _AnalyzeTabState extends State<AnalyzeTab> {
                               ),
                             ),
                           ),
-                          onPressed: _pickImageFromGallery,
+                          onPressed: () {
+                            if (widget.interstitialAd != null) {
+                              widget.interstitialAd!.show();
+                            } else {
+                              debugPrint('Interstitial ad is not ready yet.');
+                            }
+                            _pickImageFromGallery();
+                          },
                           child: Text('Elegir de la galería', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white)),
                         ),
                       ),

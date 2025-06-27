@@ -49,6 +49,8 @@ class _SettingsPageState extends State<SettingsPage> {
         profile = null;
       });
     }
+    // ignore: use_build_context_synchronously
+    context.goNamed(GetStartedPage.pathName);
   }
 
   @override

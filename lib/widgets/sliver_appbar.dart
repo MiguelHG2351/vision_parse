@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class SliverAppbar extends SliverPersistentHeaderDelegate {
-  const SliverAppbar({
+  SliverAppbar({
     required TabController tabController,
+    this.interstitialAd
   }) : _tabController = tabController;
 
+  InterstitialAd? interstitialAd;
   final TabController _tabController;
 
   @override
