@@ -5,6 +5,8 @@ import 'package:vision_parse/blocs/bloc/auth_bloc.dart';
 import 'package:vision_parse/pages/home_page.dart';
 import 'package:vision_parse/utils/debouncer.dart';
 import 'package:vision_parse/utils/validator.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
+import 'package:vision_parse/pages/complete_profile_page.dart';
 
 class SigninPage extends StatefulWidget {
   const SigninPage({super.key});
@@ -126,7 +128,7 @@ class _SigninPageState extends State<SigninPage> {
                 ),
                 SizedBox(height: 10),
                 BlocConsumer<AuthBloc, AuthState>(
-                  listener: (context, state) {
+                  listener: (context, state) async {
                     if (state.emailLoginProgressStatus.isError) {
                       final snackBar = SnackBar(
                         content: Text(
@@ -140,9 +142,30 @@ class _SigninPageState extends State<SigninPage> {
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       isButtonEnabled = true                                            ;
                     }
-                    if (state.emailLoginProgressStatus.isSuccess) {
-                      context.goNamed(HomePage.pathName); // Redirect to the desired page
+                  if (state.emailLoginProgressStatus.isSuccess){
+                    final supabaseClient = supabase.Supabase.instance.client;
+                    final userId = supabaseClient.auth.currentUser?.id;
+
+                    if (userId != null) {
+                      final profile = await supabaseClient
+                          .from('profiles')
+                          .select('first_name, last_name')
+                          .eq('id', userId)
+                          .maybeSingle();
+
+                      final firstName = profile?['first_name']?.toString().trim();
+                      final lastName = profile?['last_name']?.toString().trim();
+
+                      final isProfileIncomplete = (firstName == null || firstName.isEmpty) &&
+                                                  (lastName == null || lastName.isEmpty);
+
+                      if (isProfileIncomplete) {
+                        context.goNamed(CompleteProfilePage.pathName); // Asegurate de tener esta ruta en GoRouter
+                      } else {
+                        context.goNamed(HomePage.pathName);
+                      }
                     }
+                  }
                   },
                   builder: (context, state) {
                     return Row(

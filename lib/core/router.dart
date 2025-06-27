@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:vision_parse/blocs/bloc/auth_bloc.dart';
 import 'package:vision_parse/core/get_it.dart';
+import 'package:vision_parse/pages/complete_profile_page.dart';
 import 'package:vision_parse/pages/get_started_page.dart';
 import 'package:vision_parse/pages/home_page.dart';
 import 'package:vision_parse/pages/extract_page.dart';
@@ -45,6 +46,11 @@ final GoRouter router = GoRouter(
       name: RegisterPage.pathName,
       path: RegisterPage.path,
       builder: (context, state) => const RegisterPage(),
+    ),
+    GoRoute(
+      path: CompleteProfilePage.path,
+      name: CompleteProfilePage.pathName,
+      builder: (context, state) => const CompleteProfilePage(),
     ),
     StatefulShellRoute.indexedStack(
       branches: [
