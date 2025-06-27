@@ -29,8 +29,8 @@ class _SigninPageState extends State<SigninPage> {
 
   void _validateForm() {
     // validate fields
-    final isValid = _emailController.text.isNotEmpty &&
-        _passwordController.text.isNotEmpty;
+    final isValid =
+        _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
     setState(() {
       isButtonEnabled = isValid;
     });
@@ -44,7 +44,7 @@ class _SigninPageState extends State<SigninPage> {
     _passwordFocusNode.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final debouncer = Debouncer(milliseconds: 500);
@@ -55,24 +55,20 @@ class _SigninPageState extends State<SigninPage> {
         child: Container(
           padding: const EdgeInsets.all(20),
           width: double.infinity,
-          constraints: BoxConstraints(
-            maxWidth: 400
-          ),
+          constraints: BoxConstraints(maxWidth: 400),
           child: Form(
-            key: _formKey, // with the key you can use _formKey.currentState?.validate() to check if all fields are valid
+            key:
+                _formKey, // with the key you can use _formKey.currentState?.validate() to check if all fields are valid
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // .asset is used to load an image from the assets folder
-                Image.asset(
-                  'assets/images/pingu-login.png',
-                  width: 100,
-                ),
+                Image.asset('assets/images/pingu-login.png', width: 100),
                 SizedBox(height: 20),
                 Text(
                   'Bienvenido!',
                   style: textTheme.displaySmall?.copyWith(
-                    fontWeight: FontWeight.bold
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 SizedBox(height: 16),
@@ -90,11 +86,13 @@ class _SigninPageState extends State<SigninPage> {
                   onChanged: (_) {
                     debouncer.run(() {
                       _validateForm();
-                    },);
+                    });
                   },
                   validator: (email) {
                     final validateEmail = emailValidator(email ?? '');
-                    if (email == null || email.isEmpty || validateEmail == false) {
+                    if (email == null ||
+                        email.isEmpty ||
+                        validateEmail == false) {
                       return 'Please enter your email';
                     }
                     return null;
@@ -115,7 +113,7 @@ class _SigninPageState extends State<SigninPage> {
                   onChanged: (_) {
                     debouncer.run(() {
                       _validateForm();
-                    },);
+                    });
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -140,79 +138,84 @@ class _SigninPageState extends State<SigninPage> {
                         backgroundColor: Colors.red,
                       );
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      isButtonEnabled = true                                            ;
+                      isButtonEnabled = true;
                     }
-                  if (state.emailLoginProgressStatus.isSuccess){
-                    final supabaseClient = supabase.Supabase.instance.client;
-                    final userId = supabaseClient.auth.currentUser?.id;
-
-                    if (userId != null) {
-                      final profile = await supabaseClient
-                          .from('profiles')
-                          .select('first_name, last_name')
-                          .eq('id', userId)
-                          .maybeSingle();
-
-                      final firstName = profile?['first_name']?.toString().trim();
-                      final lastName = profile?['last_name']?.toString().trim();
-
-                      final isProfileIncomplete = (firstName == null || firstName.isEmpty) &&
-                                                  (lastName == null || lastName.isEmpty);
-
-                      if (isProfileIncomplete) {
-                        context.goNamed(CompleteProfilePage.pathName); // Asegurate de tener esta ruta en GoRouter
-                      } else {
-                        context.goNamed(HomePage.pathName);
-                      }
+                    if (state.emailLoginProgressStatus.isSuccess) {
+                      context.goNamed(HomePage.pathName);
                     }
-                  }
                   },
                   builder: (context, state) {
                     return Row(
                       children: [
                         Expanded(
                           child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(context).primaryColor,
-                            disabledBackgroundColor: Colors.grey,
-                            foregroundColor: Colors.white
-                          ),
-                          onPressed: isButtonEnabled ? () {
-                            if (_formKey.currentState?.validate() ?? false) {
-                              _emailFocusNode.unfocus();
-                              _passwordFocusNode.unfocus();
-                              context.read<AuthBloc>().add(
-                                AuthEmailLoginEvent(
-                                  email: _emailController.text,
-                                  password: _passwordController.text
-                                )
-                              );
-                            }
-                          } : null,
-                          child: AnimatedSize(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                            child: AnimatedSwitcher(
-                              transitionBuilder: (child, animation) {
-                                // Combina fade + scale para un efecto más vistoso
-                                return FadeTransition(
-                                  opacity: animation,
-                                  child: ScaleTransition(scale: animation, child: child),
-                                );
-                              },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Theme.of(context).primaryColor,
+                              disabledBackgroundColor: Colors.grey,
+                              foregroundColor: Colors.white,
+                            ),
+                            onPressed:
+                                isButtonEnabled
+                                    ? () {
+                                      if (_formKey.currentState?.validate() ??
+                                          false) {
+                                        _emailFocusNode.unfocus();
+                                        _passwordFocusNode.unfocus();
+                                        context.read<AuthBloc>().add(
+                                          AuthEmailLoginEvent(
+                                            email: _emailController.text,
+                                            password: _passwordController.text,
+                                          ),
+                                        );
+                                      }
+                                      if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+                                        final snackBar = SnackBar(
+                                          content: Text(
+                                            'Por favor, completa todos los campos',
+                                            style: textTheme.titleMedium?.copyWith(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          backgroundColor: Colors.red,
+                                        );
+                                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                        return;
+                                      }
+                                    }
+                                    
+                                    : null,
+                            child: AnimatedSize(
                               duration: const Duration(milliseconds: 300),
-                              child: state.emailLoginProgressStatus.isLoading ? SizedBox(
-                                key: const ValueKey('loader'),
-                                width: 20,
-                                height: 20,
-                                child: const CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white,
-                                ),
-                              ) : const Text('Iniciar sesión')
+                              curve: Curves.easeInOut,
+                              child: AnimatedSwitcher(
+                                transitionBuilder: (child, animation) {
+                                  // Combina fade + scale para un efecto más vistoso
+                                  return FadeTransition(
+                                    opacity: animation,
+                                    child: ScaleTransition(
+                                      scale: animation,
+                                      child: child,
+                                    ),
+                                  );
+                                },
+                                duration: const Duration(milliseconds: 300),
+                                child:
+                                    state.emailLoginProgressStatus.isLoading
+                                        ? SizedBox(
+                                          key: const ValueKey('loader'),
+                                          width: 20,
+                                          height: 20,
+                                          child:
+                                              const CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                                color: Colors.white,
+                                              ),
+                                        )
+                                        : const Text('Iniciar sesión'),
+                              ),
                             ),
                           ),
-                        ))
+                        ),
                       ],
                     );
                   },
@@ -226,8 +229,8 @@ class _SigninPageState extends State<SigninPage> {
                   },
                   child: const Text('Registrarse'),
                 ),
-              ]
-            )
+              ],
+            ),
           ),
         ),
       ),
