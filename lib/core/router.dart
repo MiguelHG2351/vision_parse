@@ -26,7 +26,7 @@ final GoRouter router = GoRouter(
 
     // if the user is a guest or has a valid Supabase session, redirect to HomePage instead of GetStartedPage
     if ((isGuest || supabaseSession != null) && state.uri.path.contains(GetStartedPage.path)) {
-      serviceLocator<AuthBloc>().add(AuthRefreshSession());
+      if (supabaseSession != null) serviceLocator<AuthBloc>().add(AuthRefreshSession());
       return HomePage.path;
     }
     return null;
