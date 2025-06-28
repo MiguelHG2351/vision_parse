@@ -16,14 +16,8 @@ class CustomBottomNavigation extends StatefulWidget {
 
 class _CustomBottomNavigationState extends State<CustomBottomNavigation> {
   
-  int _selectedIndex = 0;
-  
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    // NavigatorPage is an enum that represents the pages in the app
-    // 0 is Home, 1 is Settings
+    // Solo navegamos, no seteamos estado local
     final page = NavigatorPage.values[index];
     print('Selected page: $page, index: $index');
     _navigate(page, context);
@@ -55,12 +49,11 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> {
         BottomNavigationBarItem(
           icon: Icon(Icons.settings, size:40),
           label: 'Ajustes',
-
         ),
       ],
-      currentIndex: _selectedIndex,
+      currentIndex: widget.navigationShell.currentIndex, // Usamos el índice del navigationShell
       selectedItemColor: Colors.deepOrangeAccent,
-      unselectedItemColor: colorScheme.onSurface.withValues(alpha: 0.5),
+      unselectedItemColor: colorScheme.onSurface.withAlpha(128),
       selectedLabelStyle: const TextStyle(
         fontSize: 16, // ← Tamaño para el ítem seleccionado
         fontWeight: FontWeight.bold,
