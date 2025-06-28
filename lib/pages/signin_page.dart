@@ -93,7 +93,7 @@ class _SigninPageState extends State<SigninPage> {
                     if (email == null ||
                         email.isEmpty ||
                         validateEmail == false) {
-                      return 'Please enter your email';
+                      return 'Por favor ingresar correo';
                     }
                     return null;
                   },
@@ -117,9 +117,9 @@ class _SigninPageState extends State<SigninPage> {
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
+                      return 'Por favor ingresar contraseña';
                     } else if (value.length < 6) {
-                      return 'Password must be at least 6 characters long';
+                      return 'La contraseña debe ser de al menos 6 caracteres';
                     }
                     return null;
                   },
